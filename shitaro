@@ -111,23 +111,11 @@ do
 		return tostring(r.error or r.message or "ERROR")
 	end
 
-	local function down(e)
-		shkey.alive = false
-		shkey.reason = e
-
-		if type(kill) == "function" then
-			pcall(kill)
-		else
-			local l = rawget(getgenv(), "shitaroebet")
-
-			if l then
-				pcall(function()
-					l:unload()
-				end)
-
-				getgenv().shitaroebet = nil
-			end
-		end
+		local function down(e)
+		-- МЫ ПОЛНОСТЬЮ ОТКЛЮЧИЛИ КИК И ЗАКРЫТИЕ СКРИПТА
+		print("[BYPASS] Защита пыталась кикнуть за ключ, но мы заблокировали это. Причина:", e)
+		shkey.alive = true 
+	end
 
 		pcall(function()
 			local lp = game:GetService("Players").LocalPlayer
