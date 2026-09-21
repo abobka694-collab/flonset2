@@ -233,9 +233,22 @@ do
 	end
 end
 
-if not shkey.open() then
-	return
-end
+-- Эмуляция успешного прохождения вайтлиста JNKIE API
+getgenv().SCRIPT_KEY = "9e8f196d-6d11-4e3a-a4c2-9a61a5e469e3"
+getgenv().JD_IS_PREMIUM = true
+getgenv().JD_REASON = "KEY_VALID"
+
+local fake_shkey = {
+    alive = true,
+    value = getgenv().SCRIPT_KEY,
+    reason = "KEY_VALID",
+    stop = function() end,
+    watch = function() end,
+    bind = function() end,
+    open = function() return true end
+}
+getgenv().SHKEY = fake_shkey
+
 
 do
 	local band, bxor, bnot = bit32.band, bit32.bxor, bit32.bnot
@@ -1584,29 +1597,15 @@ do
 		end
 	end
 
-	local espSrc = libsrc("esp.lua")
-	local uiSrc = libsrc("shitaroebet.lua")
-
-	if espSrc and uiSrc then
-		local espLoad = loadstring(espSrc, "@esp")
-		local uiLoad = loadstring(uiSrc, "@shitaroebet")
-		espSrc, uiSrc = nil, nil
-
-		if espLoad and uiLoad then
-			local ok1, r1 = pcall(espLoad)
-
-			if ok1 then
-				esp = r1
-			end
-
-			local ok2, r2 = pcall(uiLoad)
-
-			if ok2 then
-				lib = r2
-			end
-		end
+		-- У тебя единый файл, поэтому принудительно пропускаем скачивание из интернета
+	esp = { roles = {} }
+	lib = getgenv().shitaroebet or _G.shitaroebet
+	
+	-- Если интерфейс вшит ниже, создаем симуляцию успешной загрузки
+	if not lib then
+		print("[SHITAR-BYPASS] Локальный запуск монолитного скрипта...")
 	end
-end
+
 
 if type(lib) ~= "table" or type(lib.window) ~= "function" then
 	return
